@@ -1,0 +1,25 @@
+{
+    "name": "eskimo",
+    "version": "0.0.1",
+    "main": "./lib/index.js",
+    "scripts": {
+        "test": "jest --",
+        "coverage": "jest --collectCoverage --"
+    },
+    "bin": {
+        "eskimo": "./lib/bin/index.js"
+    },
+    "files": [
+        "lib"
+    ],
+    "dependencies": {
+        "casual": "https://github.com/abhimanyupandian/casual.git",
+        "command-line-args": "",
+        "command-line-usage": "^6.1.1",
+        "consola": "^2.15.3",
+        "json-server": ""
+    },
+    "devDependencies": {
+        "jest": "^27.1.0"
+    }
+}
