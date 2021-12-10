@@ -227,7 +227,7 @@ Eskimo is composed of the following concepts:
     These are list or objects. Unlike primitives, these require a ":value" sibling to be provided that describe what the list or object should hold.	
 	
 ### Created by
-@[abhimanyupandian](https://github.com/abhimanyupandian)
+[abhimanyupandian](https://github.com/abhimanyupandian)
 	
 ### Credits
 Eskimo uses [json-server](https://github.com/typicode/json-server) and [casual](https://github.com/boo1ean/casual) in the backend.
