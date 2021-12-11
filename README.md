@@ -28,7 +28,7 @@ Eskimo aims to abstract the complexities of coding a mock server into simple JSO
 **Install Eskimo**  
 
 ```
-npm -g install https://github.com/kappasquare/eskimo.git
+npm -g i @kappasquare/eskimo
 ```
 
 **Start Eskimo**
