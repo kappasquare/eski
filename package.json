@@ -1,7 +1,7 @@
 {
-    "name": "@abhimanyupandian/eskimo",
-    "description": "",
-    "version": "0.0.1",
+    "name": "@kappasquare/eskimo",
+    "description": "A new mocking server for developers and testers. Eskimo aims to abstract the complexities of coding a mock server into simple JSON configurations.",
+    "version": "0.0.2",
     "main": "./lib/index.js",
     "scripts": {
         "test": "jest --",
