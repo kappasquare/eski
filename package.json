@@ -1,5 +1,6 @@
 {
     "name": "eskimo",
+    "description": "",
     "version": "0.0.1",
     "main": "./lib/index.js",
     "scripts": {
@@ -12,6 +13,13 @@
     "files": [
         "lib"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kappasquare/eskimo"
+      },
+    "keywords": ["mock", "mock-server", "eskimo", "api", "server", "json"],
+    "author": "Abhimanyu Pandian",
+    "license": "MIT",
     "dependencies": {
         "casual": "https://github.com/abhimanyupandian/casual.git",
         "command-line-args": "",
