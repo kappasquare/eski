@@ -7,7 +7,7 @@ const {
     Server
 } = require("../lib/index.js");
 
-test("Eskimo Start Success", () => {
+test("Eski Start Success", () => {
     const server = new Server();
 
     function start() {
@@ -22,7 +22,7 @@ test("Eskimo Start Success", () => {
     expect(start).toThrow(new Error("Success"));
 });
 
-test("Eskimo GET Success", () => {
+test("Eski GET Success", () => {
     const server = new Server();
     server.start({
         port: 5000,
