@@ -1,6 +1,6 @@
 {
-    "name": "@kappasquare/eskimo",
-    "description": "A new mocking server for developers and testers. Eskimo aims to abstract the complexities of coding a mock server into simple JSON configurations.",
+    "name": "@kappasquare/eski",
+    "description": "A new mocking server for developers and testers. Eski aims to abstract the complexities of coding a mock server into simple JSON configurations.",
     "version": "0.0.4",
     "main": "./lib/index.js",
     "scripts": {
@@ -8,16 +8,16 @@
         "coverage": "jest --collectCoverage --"
     },
     "bin": {
-        "eskimo": "./lib/bin/index.js"
+        "eski": "./lib/bin/index.js"
     },
     "files": [
         "lib"
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/kappasquare/eskimo"
+        "url": "https://github.com/kappasquare/eski"
       },
-    "keywords": ["mock", "mock-server", "eskimo", "api", "server", "json"],
+    "keywords": ["mock", "mock-server", "eski", "api", "server", "json"],
     "author": "Abhimanyu Pandian",
     "license": "MIT",
     "dependencies": {
