@@ -4,17 +4,17 @@
 
 
 <h1 align=center>
-    <img width="250" src="./eskimo.png">
+    <img width="250" src="./eski.png">
     </br></br>
 
 
-    Eskimo - Supercharged Mocking
+    Eski - Supercharged Mocking
 </h1>
 <h3 align=center>
 
 
-Introducing Eskimo.</br>A new mocking server for developers and testers.</br>
-Eskimo aims to abstract the complexities of coding a mock server into simple JSON configurations.
+Introducing Eski.</br>A new mocking server for developers and testers.</br>
+Eski aims to abstract the complexities of coding a mock server into simple JSON configurations.
 </br></br>
 </h3>
 
@@ -25,27 +25,27 @@ Eskimo aims to abstract the complexities of coding a mock server into simple JSO
 
 ## Getting started
 
-**Install Eskimo**  
+**Install Eski**  
 
 ```
-npm -g i @kappasquare/eskimo
+npm -g i @kappasquare/eski
 ```
 
-**Start Eskimo**
+**Start Eski**
 
 ```bash
-eskimo --routes "~/path/to/routes.json" --primitives "~/path/to/custom_primitives.js" --port 3210
+eski --routes "~/path/to/routes.json" --primitives "~/path/to/custom_primitives.js" --port 3210
 ```
 
-**NOTE** Sample routes, primitives and schema configuration files are provided [here](https://github.com/kappasquare/eskimo/tree/main/example)
+**NOTE** Sample routes, primitives and schema configuration files are provided [here](https://github.com/kappasquare/eski/tree/main/example)
 
-## What is Eskimo for?
+## What is Eski for?
 - Developers and Testers can quickly spin up a working API server that generates random data, almost exactly replicating the real world scenario.
-- Additionally, Developers, Testers and Stakeholders can use the Eskimo Schema as a Proof of Contract. What this means is that, the Schema definition can be included as a part of the design phase of the backend API development. Once defined, the Schema becomes the source of truth of how the API is supposed to work and any deviations from that can be immedately be identified as an anomaly.
+- Additionally, Developers, Testers and Stakeholders can use the Eski Schema as a Proof of Contract. What this means is that, the Schema definition can be included as a part of the design phase of the backend API development. Once defined, the Schema becomes the source of truth of how the API is supposed to work and any deviations from that can be immedately be identified as an anomaly.
 
 ## Core concepts
-Eskimo is composed of the following concepts:
-1. Eskimo Keywords
+Eski is composed of the following concepts:
+1. Eski Keywords
 2. Schema (a JSON configuration file)
 3. Routes (a JSON configuration file)
 4. Data types:
@@ -80,13 +80,13 @@ Eskimo is composed of the following concepts:
             ]
         }
 
-	**Note**: The core idea of Eskimo is to generate random data, to replicate the real world scenarios more effectively. This means the number of orders in the above example, need not always be 2. As we'll see, the field can be configured to generate random number of orders.
+	**Note**: The core idea of Eski is to generate random data, to replicate the real world scenarios more effectively. This means the number of orders in the above example, need not always be 2. As we'll see, the field can be configured to generate random number of orders.
 
     ## Schema
 
     The Schema is a JSON file that defines the structure of the entire API response and also specifies what data has to filled for each field of the response. 
 
-    Now, let's take a look at how the Eskimo Schema looks like, to fulfil our requirement:
+    Now, let's take a look at how the Eski Schema looks like, to fulfil our requirement:
 
         {
             ":is": object",
@@ -118,9 +118,9 @@ Eskimo is composed of the following concepts:
             }
         }
 
-    That's it! That takes care of the Eskimo Schema! 
+    That's it! That takes care of the Eski Schema! 
     
-    Now, let's understand the other core concepts of Eskimo using the above example:
+    Now, let's understand the other core concepts of Eski using the above example:
 
 	## Routes
 	The Route configuration file is a JSON file that maps the API endpoints to the Schemas.
@@ -135,27 +135,27 @@ Eskimo is composed of the following concepts:
 	```
     Any number of routes can be mapped to schemas in a similar manner. One thing however to keep in mind is that the training and leading "/" must be provided correctly. In the above snippet, "/api/v1/restaurant" has a child "/details". This is valid and so is parent as "/api/v1/restaurant/" and child as "details". 
     However "/api/v1/restaurant/" and "/details" is invalid as it would result in an endpoint with "//" upon processing. ie; "/api/v1/restaurant//details".
-	**Note:** The path to the Schema configuration file currently requires the absolute path. Relatives paths are not supported yet. Check [this](https://github.com/kappasquare/eskimo/issues/2) for more info.
+	**Note:** The path to the Schema configuration file currently requires the absolute path. Relatives paths are not supported yet. Check [this](https://github.com/kappasquare/eski/issues/2) for more info.
 
-	Routes are provided to Eskimo as a command line argument "--routes" like so:
+	Routes are provided to Eski as a command line argument "--routes" like so:
 	```bash
-	eskimo --routes "/path/to/routes.json"
+	eski --routes "/path/to/routes.json"
 	```
 	
     ## Primitives
     Primitives are simply javascript functions, that generate random data.
-    In order to achieve this, Eskimo uses existing open-source library called Casual.
+    In order to achieve this, Eski uses existing open-source library called Casual.
     
     **Note**: Currently a fork of Casual is being used. Check [this](https://github.com/abhimanyupandian/casual) for more info. 
     
     Casual uses "Embedded generators" and "Custom generators" to generate random data.
-    Eskimo Primitives are nothing but these "Embedded generators" and "Custom generators".
+    Eski Primitives are nothing but these "Embedded generators" and "Custom generators".
     
-    Whenever the value of ":is" is other than a "list" or an "object", Eskimo considers it as a Primitive, and first looks for it in the existing pool of Primitives - the Built-in Primitives.
-    If a Built-in Primitive does not exist, Eskimo looks for the value in the custom pool of Primitives, defined by the user and registered before Eskimo is started. These are Custom Primitives. If the Primitive is not found, then a run time error is thrown ,thereby failing the API call with a 500.
+    Whenever the value of ":is" is other than a "list" or an "object", Eski considers it as a Primitive, and first looks for it in the existing pool of Primitives - the Built-in Primitives.
+    If a Built-in Primitive does not exist, Eski looks for the value in the custom pool of Primitives, defined by the user and registered before Eski is started. These are Custom Primitives. If the Primitive is not found, then a run time error is thrown ,thereby failing the API call with a 500.
 
 	####	Registering Custom Primitives: 
-   Custom Primitives is a .js file that contains an export to all the functions that the user wants Eskimo to consider as a new primitive. 
+   Custom Primitives is a .js file that contains an export to all the functions that the user wants Eski to consider as a new primitive. 
 
     For example, custom_primitives.js could contain:
 
@@ -166,21 +166,21 @@ Eskimo is composed of the following concepts:
         }
 
 
-	These custom primitives can be included/registered by providing the .js file as an argument to the Eskimo server, like so : 
+	These custom primitives can be included/registered by providing the .js file as an argument to the Eski server, like so : 
 	
-		eskimo --primitives ~/path/to/custom_primitives.js
+		eski --primitives ~/path/to/custom_primitives.js
 		
 	These primitives can then be used as part of the Schema like Built-in Primitives.
 	
-    ## Eskimo Keywords
-    The Eskimo Keywords can be considered as one of the cores of Eskimo's functionality. It helps users define in the Schema, how/what data has to be generated in the API response.
+    ## Eski Keywords
+    The Eski Keywords can be considered as one of the cores of Eski's functionality. It helps users define in the Schema, how/what data has to be generated in the API response.
     
     There are 6 keywords:
       1. **:<zero-width space>key** - Object-keyword
         
 	      The ":<zero-width space>key" keyword specifies the name of the field. It is important to note that the ":<zero-width space>key" keyword requires the name of the field to be provided as the postfix, in the following format":<zero-width space>key:<desired_field_name>" eg; ":<zero-width space>key:location". 
           **Note** : Every ":<zero-width space>key" holds another JSON structure, that defines how to generate the data for that key in the API response.
-          From the above example, the correct Schema definition for "location" field is ":<zero-width space>key:location" : {":value": "address"} and not ":<zero-width space>key:location" : "address". The latter is an invalid Eskimo Schema and Eskimo will be unable to process it.
+          From the above example, the correct Schema definition for "location" field is ":<zero-width space>key:location" : {":value": "address"} and not ":<zero-width space>key:location" : "address". The latter is an invalid Eski Schema and Eski will be unable to process it.
 
       2. **:is** - Generic-keyword
         
@@ -190,8 +190,8 @@ Eskimo is composed of the following concepts:
       3. **:value** - List/Object-keyword
 
 			This describes the structure of the object or the list.
-        When the value being described is a list, then the ":value" holds the Eskimo Schema of every element in the list.
-        When the value being describe is an object, then the ":value" holds the Eskimo Schema of the object itself.
+        When the value being described is a list, then the ":value" holds the Eski Schema of every element in the list.
+        When the value being describe is an object, then the ":value" holds the Eski Schema of the object itself.
         Lets consider our above example. 
         The first line of the Schema says : ":is:": object". This means that, the entire response is an object. And there exists a ":value" sibling defined right after it, which then describes what the Schema of the object.
         Similarly, ":<zero-width space>key:orders" is declared to be a list (":is" : "list"), the corresponding sibling ":value", describes what each value of the `orders` list must look like. In this case, each value is going to be an object.
@@ -223,7 +223,7 @@ Eskimo is composed of the following concepts:
 			 }
 
        
-			**Note**: Unlike all Eskimo keywords fields inside ":conditions", like "n", do not have a ":" prefixed. This signifies that they are directly passed as arguments to the backend javascript functions and thus, the names must match (ie; without ":") so that "sentences" takes "n" as an argument. Hence we provide "n" within ":conditions" as "n" and not ":n".
+			**Note**: Unlike all Eski keywords fields inside ":conditions", like "n", do not have a ":" prefixed. This signifies that they are directly passed as arguments to the backend javascript functions and thus, the names must match (ie; without ":") so that "sentences" takes "n" as an argument. Hence we provide "n" within ":conditions" as "n" and not ":n".
 
     ## Aggregators
 
@@ -233,10 +233,10 @@ Eskimo is composed of the following concepts:
 [abhimanyupandian](https://github.com/abhimanyupandian)
 	
 ### Credits
-Eskimo uses [json-server](https://github.com/typicode/json-server) and [casual](https://github.com/boo1ean/casual) in the backend.
+Eski uses [json-server](https://github.com/typicode/json-server) and [casual](https://github.com/boo1ean/casual) in the backend.
 	
 ### Disclaimer
-Eskimo currently only supports GET requests. As of yet, there are no requirements or plans to support other methods.
+Eski currently only supports GET requests. As of yet, there are no requirements or plans to support other methods.
 	
 ### Roadmap
 - [ ] Support Query params in GET requests
