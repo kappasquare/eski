@@ -4,7 +4,6 @@
 
 
 <h1 align=center>
-    <img width="250" src="./eski.png">
     </br></br>
 
 
