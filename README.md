@@ -12,7 +12,7 @@
 <h3 align=center>
 
 
-Introducing Eski.</br>A new mocking server for developers and testers.</br>
+Introducing Eski.</br>A new mock server for developers and testers.</br>
 Eski aims to abstract the complexities of coding a mock server into simple JSON configurations.
 </br></br>
 </h3>
