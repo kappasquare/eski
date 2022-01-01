@@ -7,7 +7,7 @@
     </br></br>
 
 
-    Eski - Supercharged Mocking
+    Eski - Supercharged Mock Server
 </h1>
 <h3 align=center>
 
