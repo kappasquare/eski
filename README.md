@@ -237,3 +237,7 @@ Eskimo uses [json-server](https://github.com/typicode/json-server) and [casual](
 	
 ### Disclaimer
 Eskimo currently only supports GET requests. As of yet, there are no requirements or plans to support other methods.
+	
+### Roadmap
+	[] Support Query params in GET requests
+	[] Support random error responses and codes
