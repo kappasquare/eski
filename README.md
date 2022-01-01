@@ -18,7 +18,7 @@ Eski aims to abstract the complexities of coding a mock server into simple JSON 
 </h3>
 
 ## Features
-1. A new, easy to grasp, keyword syntax to describe API responses entirely within a JSON file, eradicating the need to write raw logic through code.
+1. A new, easy to grasp, keyword syntax to describe API responses entirely within a JSON schema file (and hence the name Eski = Easy + Schema), eradicating the need to write raw logic through code.
 2. Built-in Primitives that help generate random data for some of the most commonly used data. eg; name, address, phone number, random string, random integer and a lot more. See [this](https://github.com/abhimanyupandian/casual) for more info.
 3. Ability to add custom Primitives to generate data, specific to a variety of use-cases.
 
