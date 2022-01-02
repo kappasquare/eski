@@ -7,13 +7,13 @@
     </br></br>
 
 
-    Eski - An undemanding Mock Server
+    Eski - An Undemanding Mock Server
 </h1>
 <h3 align=center>
 
 
 Introducing Eski.</br>A new mock server for developers and testers.</br>
-Eski aims to abstract the complexities of coding a mock server into simple JSON configurations.
+Eski aims to abstract the complexities and efforts of coding a mock server into simple JSON configurations.
 </br></br>
 </h3>
 
