@@ -101,16 +101,10 @@ Eski is composed of the following concepts:
                     ":value" : {
                         ":is" : ":object"
                         ":value : {
-                            "customer_name": {":is" : "name"},
-                            "item" : {":is": "word"}, // Could be replaced with a custom-primitive to generate our own orders. But lets use a built-in primitive for this example for simplicity.
-                            "quantity" : {":is" : "random"},
-                            "location" : {":is" : "address"},
-                            "comments": {
-                                ":is" : "comments", 
-                                ":sentences": {
-                                    "n": 5
-                                }
-                            } 
+                            ":key:customer_name": {":is" : "name"},
+                            ":key:item" : {":is": "word"}, // Could be replaced with a custom-primitive to generate our own orders. But lets use a built-in primitive for this example for simplicity.
+                            ":key:quantity" : {":is" : "random"},
+                            ":key:location" : {":is" : "address"}
                         }
                     }
                 }
