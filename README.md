@@ -91,7 +91,7 @@ Eski is composed of the following concepts:
     Now, let's take a look at how the Eski Schema looks like, to fulfil our requirement:
 
         {
-            ":is": object",
+            ":is": "object",
             ":value": {
                 ":key:name": {":value": "company_name"},
                 ":key:location" : {":value": "address"},
