@@ -7,7 +7,7 @@
     </br></br>
 
 
-    Eski - Supercharged Mock Server
+    Eski - An undemanding Mock Server
 </h1>
 <h3 align=center>
 
