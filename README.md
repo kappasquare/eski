@@ -237,5 +237,7 @@ Eski currently only supports GET requests. As of yet, there are no requirements 
 Eski was named to abbreviate Easy Schema. Easy + Schema = Eski :)
 	
 ### Roadmap
+- [ ] Add UTs
+- [ ] Add typescript support
 - [ ] Support Query params in GET requests
 - [ ] Support random error responses and codes
