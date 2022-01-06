@@ -44,6 +44,7 @@ The core utility of Eski is to serve as an API mock server that generates random
 
 Using Eski: 
 - Developers and Testers can quickly spin up a working API server that generates random data, almost exactly replicating the real world scenario.
+- Eski can also be used to generate data that represent the payload for POST/PUT/PATCH requests. We first build a schema that is supported by the endpoint and start generating data. This data can then be used as the payload for the update requests and validate if the endpoint accepts them.
 - Additionally, Developers, Testers and Stakeholders can use the Eski Schema as a Proof of Contract. What this means is that, the Schema definition can be included as a part of the design phase of the backend API development. Once defined, the Schema becomes the source of truth of how the API is supposed to work and any deviations from that can be immedately be identified as an anomaly.
 
 ## Core concepts
