@@ -1,0 +1,33 @@
+{
+    "name": "@kappasquare/eski",
+    "description": "A new mocking server for developers and testers. Eski aims to abstract the complexities of coding a mock server into simple JSON configurations.",
+    "version": "0.0.5",
+    "main": "./lib/index.js",
+    "scripts": {
+        "test": "jest --",
+        "coverage": "jest --collectCoverage --"
+    },
+    "bin": {
+        "eski": "./lib/bin/index.js"
+    },
+    "files": [
+        "lib"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kappasquare/eski"
+      },
+    "keywords": ["mock", "mock-server", "eski", "api", "server", "json"],
+    "author": "Abhimanyu Pandian",
+    "license": "MIT",
+    "dependencies": {
+        "casual": "https://github.com/abhimanyupandian/casual.git",
+        "command-line-args": "",
+        "command-line-usage": "^6.1.1",
+        "consola": "^2.15.3",
+        "json-server": ""
+    },
+    "devDependencies": {
+        "jest": "^27.1.0"
+    }
+}
