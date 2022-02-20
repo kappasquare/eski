@@ -40,7 +40,7 @@ eski --routes "~/path/to/routes.json" --primitives "~/path/to/custom_primitives.
 **NOTE** Sample routes, primitives and schema configuration files are provided [here](https://github.com/kappasquare/eski/tree/main/example)
 
 ## What is Eski for?
-The core utility of Eski is to serve as an API mock server that generates random data with minimal or zero coding, in an effort to eradicate the dependencies across teams (BE developer and FE developer/BE developer and Automation Devleopers) atleast at the initial stages of product development.
+The core utility of Eski is to serve as an API mock server that generates random data with minimal or zero coding, in an effort to eradicate the dependencies across teams (BE developer and FE developer/BE developer and Automation Developers) atleast at the initial stages of product development.
 
 Using Eski: 
 - Developers and Testers can quickly spin up a working API server that generates random data, almost exactly replicating the real world scenario.
