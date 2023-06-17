@@ -1,5 +1,7 @@
+// ignore_for_file: constant_identifier_names
 import 'dart:math';
 
+// ignore: non_constant_identifier_names
 final KEYWORD_SCHEMAKEY_MAP = {
   "IS": ":is",
   "KEY": ":key:",
