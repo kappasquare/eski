@@ -236,6 +236,5 @@ Eski was named to abbreviate Easy Schema. Easy + Schema = Eski :)
 	
 ### Roadmap
 - [ ] Add UTs
-- [x] Add typescript support
 - [ ] Support Query params in GET requests
 - [ ] Support random error responses and codes

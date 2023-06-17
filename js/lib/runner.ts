@@ -2,7 +2,7 @@ import commandLineArgs, { OptionDefinition } from 'command-line-args';
 import commandLineUsage from 'command-line-usage';
 import consola from 'consola';
 
-import Eski from './index';
+import EskiServer from './index';
 
 export function start() {
 
@@ -60,9 +60,9 @@ export function start() {
         consola.error("Unable to start Eski because no route configuration file was provided! \n \
         See eski --help for more information.")
     else {
-        const server = new Eski.Server({
+        const server = new EskiServer({
             port: options.port,
-            routes_configuration: options.routes,
+            routes_configuration: { path: options.routes },
             custom_primitives: options.primitives
         });
         server.start();
