@@ -81,6 +81,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  flat:
+    dependency: "direct main"
+    description:
+      name: flat
+      sha256: "454cb58d07b1133122a1ed495c1b03c7faabc624df4b437229eb55e58cdfc1a3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.1"
   frontend_server_client:
     dependency: transitive
     description:
@@ -138,7 +146,7 @@ packages:
     source: hosted
     version: "2.1.1"
   logging:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: logging
       sha256: "623a88c9594aa774443aa3eb2d41807a48486b5613e67599fb4c41c0ad47c340"

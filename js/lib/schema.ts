@@ -37,7 +37,7 @@ function checkIfList(value: string) {
     return value == TYPE_CONTAINERS.LIST;
 };
 
-function isKey(value: string) {
+function getKey(value: string) {
     return value.toString().includes(KEYWORDS_GENERIC.KEY) ?
         value.split(KEYWORDS_GENERIC.KEY).pop() : false;
 };
@@ -48,7 +48,8 @@ class SchemaProcessor {
 
     private processList(schema: Record<string, any>, response: any[]): any[] {
         const _value = schema[KEYWORDS_GENERIC.VALUE];
-        if (!schema[KEYWORDS_LIST.MIN_LENGTH] || !schema[KEYWORDS_LIST.MAX_LENGTH]) throw new ListConditionsNotFound(); 
+        if (!schema[KEYWORDS_LIST.MIN_LENGTH] || !schema[KEYWORDS_LIST.MAX_LENGTH])
+            throw new ListConditionsNotFound();
         if (!_value[KEYWORDS_GENERIC.IS]) throw new ListValueIsNotFound();
         for (var _ in Array.from(Array(Primitives.integer({
             from: schema[KEYWORDS_LIST.MIN_LENGTH],
@@ -59,13 +60,14 @@ class SchemaProcessor {
         return response;
     };
 
-    private processObjecct(schema: Record<string, any>, response: Record<string, any[]>) {
+    private processObject(schema: Record<string, any>, response: Record<string, any[]>) {
         const _value = schema[KEYWORDS_GENERIC.VALUE];
         for (var key in _value) {
-            const extractedKey = isKey(key);
+            const extractedKey = getKey(key);
             if (extractedKey) {
                 const _processed = this._process(_value[key]);
-                if ((!!response) && (response.constructor === Array)) (response[extractedKey] as Array<any>).push(_processed)
+                if ((!!response) && (response.constructor === Array))
+                    (response[extractedKey] as Array<any>).push(_processed)
                 else response[extractedKey] = _processed;
             };
         };
@@ -90,7 +92,7 @@ class SchemaProcessor {
         const is = schema[KEYWORDS_GENERIC.IS];
         if (isListOrObject(is)) {
             if (!schema[KEYWORDS_GENERIC.VALUE]) throw new ValueNotFound();
-            return checkIfList(is) ? this.processList(schema, []) : this.processObjecct(schema, {});
+            return checkIfList(is) ? this.processList(schema, []) : this.processObject(schema, {});
         } else return this.processPrimitive(is, schema[KEYWORDS_GENERIC.CONDITIONS]);
     };
 

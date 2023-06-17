@@ -1,22 +1,34 @@
 import 'dart:io';
 import 'package:args/args.dart';
-import 'package:eski/http-server.dart';
+import 'package:eski/constants.dart';
+import 'package:eski/logger.dart';
+import 'package:eski/server.dart';
 
 Future<void> main(List<String> args) async {
   var parser = ArgParser();
-  parser.addOption('port', help: 'The port to start the Eski server on.');
+  parser.addOption(CLI_OPTION_PORT,
+      help: 'The port to start the Eski server on.',
+      defaultsTo: '$DEFAULT_PORT');
+  parser.addOption(CLI_OPTION_ROUTES,
+      help: 'The path to the Eski schema to use.');
   try {
     start(parser.parse(args));
   } catch (error) {
     if (error is! ArgParserException) rethrow;
-    print(
-        '\nUnknown option provided. Allowed options are: \n\n ${parser.usage}\n');
+    if (error.toString().contains('Missing argument for')) {
+      Logger.error(error.toString());
+    } else {
+      Logger.error(
+          'Unknown option provided. Allowed options are: \n ${parser.usage}');
+    }
     exit(64);
   }
 }
 
 start(ArgResults pargs) async {
-  final server = await createServer(pargs['port'] ?? 3000);
-  print('Server started on ${server.address.address}:${server.port}');
-  await handleRequests(server);
+  Logger.init();
+  var server = EskiServer(
+      port: int.parse(pargs[CLI_OPTION_PORT]),
+      routes: pargs[CLI_OPTION_ROUTES]);
+  server.start();
 }

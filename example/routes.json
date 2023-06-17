@@ -1,5 +1,8 @@
 {
-  "/api/v1/configurations": {
-    "/test1": "D:\\Projects\\eski\\example\\schema.json"
+  "/api/v1": {
+    "test1": "D:\\Projects\\eski\\example\\schema.json",
+    "configurations": {
+      "test1": "D:\\Projects\\eski\\example\\scshema.json"
+    }
   }
 }

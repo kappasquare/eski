@@ -54,7 +54,8 @@ class EskiServer {
     }
 
     on(event: string, listener: (...args: any[]) => void) {
-        if (this.mode == 'cli') consola.warn(`Eski is running on CLI mode . Switch to lib mode to subscribe to events!`)
+        if (this.mode == 'cli') consola.warn(`Eski is running on CLI mode . ` +
+            `Switch to lib mode to subscribe to events!`)
         return this.emitter.on(event, listener);
     }
 
@@ -71,12 +72,14 @@ class EskiServer {
         }
     }
 
-    private getRoutesConfiguration = (routes_configuration: RoutesConfiguration) => routes_configuration.path ?
-        routes_configuration.path : routes_configuration.json!;
+    private getRoutesConfiguration = (routes_configuration: RoutesConfiguration) =>
+        routes_configuration.path ?
+            routes_configuration.path : routes_configuration.json!;
 
     private parseRoutesConfiguration(routes_configuration: RoutesConfiguration) {
         try {
-            const routes = routes_configuration.path ? require(path.resolve(process.cwd(), routes_configuration.path))
+            const routes = routes_configuration.path ? require(path.resolve(process.cwd(),
+                routes_configuration.path))
                 : JSON.parse(routes_configuration.json!);
             this.speak(null, { name: 'route-loaded', data: { routes_configuration } })
             return routes;
@@ -161,7 +164,8 @@ class EskiServer {
                     this.speak(
                         {
                             level: 'success',
-                            message: `Successfully registered primitive '${eachPrimitive}' from ${path.relative(process.cwd(), module)}.`
+                            message: `Successfully registered primitive '${eachPrimitive}' ` +
+                                `from ${path.relative(process.cwd(), module)}.`
                         },
                         {
                             name: 'primitive-registered',
@@ -184,7 +188,8 @@ class EskiServer {
         }
 
         // Loading Processor with Custom Primitives
-        var message = this.custom_primitives ? `Adding primitives from ${this.custom_primitives}.` : `No custom primitives registered.`;
+        var message = this.custom_primitives ? `Adding primitives from ${this.custom_primitives}.` :
+            `No custom primitives registered.`;
         this.speak({
             level: 'info',
             message
