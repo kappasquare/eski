@@ -1,9 +1,5 @@
 {
   "/api/v1/configurations": {
-    "/test1": "/path/to/example/schema.json",
-    "/test2": "/path/to/example/schema.json"
-  },
-  "/api/v2/device/connections/": {
-    "/test2": "/path/to/example/schema.json"
+    "/test1": "D:\\Projects\\eski\\example\\schema.json"
   }
 }
