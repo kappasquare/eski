@@ -41,8 +41,8 @@
         },
         ":key:comments": {
             ":is": "list",
-            ":min_length": 1,
-            ":max_length": 10,
+            ":min_length": 100000,
+            ":max_length": 100000,
             ":value": {
                 ":is": "object",
                 ":value": {

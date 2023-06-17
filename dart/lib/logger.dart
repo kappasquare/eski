@@ -11,6 +11,7 @@ class Logger {
   };
 
   static init() {
+    L.Logger.root.clearListeners();
     L.Logger.root.level = L.Level.ALL;
     L.Logger.root.onRecord.listen((record) {
       var level = record.level.name.toLowerCase();

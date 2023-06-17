@@ -5,17 +5,21 @@ import 'package:eski/logger.dart';
 import 'package:eski/server.dart';
 
 Future<void> main(List<String> args) async {
+  Logger.init();
   var parser = ArgParser();
   parser.addOption(CLI_OPTION_PORT,
       help: 'The port to start the Eski server on.',
-      defaultsTo: '$DEFAULT_PORT');
+      defaultsTo: DEFAULT_PORT.toString());
   parser.addOption(CLI_OPTION_ROUTES,
       help: 'The path to the Eski schema to use.');
   try {
-    start(parser.parse(args));
+    var pargs = parser.parse(args);
+    int port = int.parse(pargs[CLI_OPTION_PORT]);
+    String routes = pargs[CLI_OPTION_ROUTES] ?? '';
+    start(port, routes);
   } catch (error) {
-    if (error is! ArgParserException) rethrow;
-    if (error.toString().contains('Missing argument for')) {
+    if (error is! ArgParserException ||
+        error.toString().contains('Missing argument for')) {
       Logger.error(error.toString());
     } else {
       Logger.error(
@@ -25,10 +29,8 @@ Future<void> main(List<String> args) async {
   }
 }
 
-start(ArgResults pargs) async {
+start(int port, String routes) async {
   Logger.init();
-  var server = EskiServer(
-      port: int.parse(pargs[CLI_OPTION_PORT]),
-      routes: pargs[CLI_OPTION_ROUTES]);
+  var server = EskiServer(port: port, routes: routes);
   server.start();
 }
