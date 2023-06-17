@@ -16,16 +16,27 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/kappasquare/eski"
-      },
-    "keywords": ["mock", "mock-server", "eski", "api", "server", "json"],
+    },
+    "keywords": [
+        "mock",
+        "mock-server",
+        "eski",
+        "api",
+        "server",
+        "json"
+    ],
     "author": "Abhimanyu Pandian",
     "license": "MIT",
     "dependencies": {
+        "@types/command-line-args": "^5.2.0",
+        "@types/command-line-usage": "^5.0.2",
+        "@types/json-server": "^0.14.4",
         "casual": "https://github.com/abhimanyupandian/casual.git",
         "command-line-args": "",
         "command-line-usage": "^6.1.1",
         "consola": "^2.15.3",
-        "json-server": ""
+        "json-server": "",
+        "ts-node": "^10.9.1"
     },
     "devDependencies": {
         "jest": "^27.1.0"
