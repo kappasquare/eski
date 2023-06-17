@@ -1,7 +1,7 @@
 import path from 'path';
 import consola from 'consola';
 import jsonServer from 'json-server';
-import { Application } from 'express';
+import type { Application } from 'express';
 import SchemaProcessor from './schema';
 
 import {
