@@ -1,7 +1,3 @@
-import Server from './server';
-import SchemaProcessor from './schema';
+import EskiServer from './server';
 
-export default {
-    Server,
-    SchemaProcessor
-}
+export default EskiServer;
