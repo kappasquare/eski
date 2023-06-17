@@ -1,5 +1,5 @@
 
-const casual = require('casual');
+import casual from 'casual';
 
 export const Primitives: Record<string, Function> = {
 	country: function () { return casual.country; },
@@ -74,8 +74,8 @@ export const Primitives: Record<string, Function> = {
 	country_code: function () { return casual.country_code; },
 	language_code: function () { return casual.language_code; },
 	locale: function () { return casual.locale; },
-	currency_code: function () { return casual.currency_code; },
-	currency_name: function () { return casual.currency_name; },
+	currency_code: function () { return (casual as any).currency_code; },
+	currency_name: function () { return (casual as any).currency_name; },
 	mime_type: function () { return casual.mime_type; },
 	file_extension: function () { return casual.file_extension; },
 	boolean: function () { return casual.boolean; },
@@ -90,7 +90,7 @@ export const Primitives: Record<string, Function> = {
 	random_key: function (object: any) { return casual.random_key(object); },
 	random_value: function (object: any) { return casual.random_value(object); },
 	random_string: function (args: { min_length: number, max_length: number, extras: any[], exclude_digits: boolean, exclude_letters: boolean }) {
-		return casual.random_string({
+		return (casual as any).random_string({
 			min_length: args.min_length, max_length: args.max_length, extras:
 				args.extras, exclude_digits: args.exclude_digits, exclude_letters: args.exclude_letters
 		});
@@ -99,12 +99,12 @@ export const Primitives: Record<string, Function> = {
 	register_provider: function (provider: string) { return casual.register_provider(provider); },
 	numerify: function (format: string) { return casual.numerify(format); },
 	randify: function (args: { format: string, extras: any[], exclude_digits: boolean, exclude_letters: boolean }) {
-		return casual.randify({
+		return (casual as any).randify({
 			format: args.format, extras: args.extras, exclude_digits: args.exclude_digits,
 			exclude_letters: args.exclude_letters
 		});
 	},
 	populate: function (format: string) { return casual.populate(format); },
-	populate_one_of: function (formats: string[]) { return casual.numerify(formats); },
+	populate_one_of: function (formats: string[]) { return (casual as any).numerify(formats); },
 
 };

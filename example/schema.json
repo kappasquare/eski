@@ -20,7 +20,7 @@
             }
         },
         ":key:name": {
-            ":is": "new",
+            ":is": "word",
             ":conditions": {
                 ":value": "XXXXXX"
             }

@@ -5,7 +5,6 @@ import consola from 'consola';
 import Eski from './index';
 
 export function start() {
-    const server = new Eski.Server();
 
     const sections = [{
         header: 'Eski',
@@ -32,38 +31,41 @@ export function start() {
     const usage = commandLineUsage(sections)
 
     const optionDefinitions: OptionDefinition[] = [{
-            name: 'routes',
-            type: String,
-            multiple: false,
-            alias: 'r'
-        },
-        {
-            name: 'primitives',
-            type: String,
-            multiple: true,
-            alias: 'p'
-        },
-        {
-            name: 'port',
-            type: Number,
-            multiple: false,
-            defaultValue: 3000
-        },
-        {
-            name: 'help'
-        }
+        name: 'routes',
+        type: String,
+        multiple: false,
+        alias: 'r'
+    },
+    {
+        name: 'primitives',
+        type: String,
+        multiple: true,
+        alias: 'p'
+    },
+    {
+        name: 'port',
+        type: Number,
+        multiple: false,
+        defaultValue: 3000
+    },
+    {
+        name: 'help'
+    }
     ];
-    
+
     const options = commandLineArgs(optionDefinitions)
 
     if ('help' in options) console.log(usage)
     else if (!options.routes)
         consola.error("Unable to start Eski because no route configuration file was provided! \n \
         See eski --help for more information.")
-    else server.start({
-        port: options.port,
-        routes_configuration: options.routes,
-        custom_primitives: options.primitives
-    });
+    else {
+        const server = new Eski.Server({
+            port: options.port,
+            routes_configuration: options.routes,
+            custom_primitives: options.primitives
+        });
+        server.start();
+    }
 
 }

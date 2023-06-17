@@ -1,7 +1,7 @@
 import path from 'path';
 import consola from 'consola';
 import jsonServer from 'json-server';
-import { Application } from 'express';
+import type { Application } from 'express';
 import SchemaProcessor from './schema';
 
 import {
@@ -12,50 +12,128 @@ import {
     ServerNotUp
 } from './error';
 
-class Server {
+import EventEmitter from 'events';
+import type http from 'http';
+
+type Only<T, U> = {
+    [P in keyof T]: T[P];
+} & {
+        [P in keyof U]?: never;
+    };
+
+type Either<T, U> = Only<T, U> | Only<U, T>;
+type Modes = 'cli' | 'lib';
+type RoutesConfiguration = Either<{ path: string }, { json: string }>;
+class EskiServer {
     private server: Application;
+    private httpServer?: http.Server;
     private processor: SchemaProcessor;
     private routes: Record<string, Record<string, string>> = {};
 
     private middlewares = jsonServer.defaults();
+    private emitter = new EventEmitter();
+    private mode: Modes;
 
-    constructor() {
+    private port: number;
+    private routes_configuration: RoutesConfiguration;
+    private custom_primitives?: string[];
+
+    constructor(options: {
+        port: number,
+        routes_configuration: RoutesConfiguration,
+        custom_primitives?: string[],
+        mode?: 'cli' | 'lib'
+    }) {
         this.server = jsonServer.create();
         this.server.use(this.middlewares);
         this.processor = new SchemaProcessor();
+        this.mode = options.mode ?? 'cli';
+        this.port = options.port ?? 3000;
+        this.routes_configuration = options.routes_configuration;
+        this.custom_primitives = options.custom_primitives;
+    }
+
+    on(event: string, listener: (...args: any[]) => void) {
+        if (this.mode == 'cli') consola.warn(`Eski is running on CLI mode . Switch to lib mode to subscribe to events!`)
+        return this.emitter.on(event, listener);
     }
 
     private isServerUp = () => !!this.server;
 
     private hasRoutes = () => !!Object.keys(this.routes).length;
 
-    private loadRoutes({
-        routes_configuration
-    }: { routes_configuration: string }) {
+    private speak = (log_details: { message: string, level: 'info' | 'success' | 'error' } | null,
+        event_details: { name: string, data: any }) => {
+        if (this.mode == 'cli' && log_details) {
+            consola[log_details.level](log_details.message);
+        } else {
+            this.emitter.emit(event_details.name, event_details.data);
+        }
+    }
+
+    private getRoutesConfiguration = (routes_configuration: RoutesConfiguration) => routes_configuration.path ?
+        routes_configuration.path : routes_configuration.json!;
+
+    private parseRoutesConfiguration(routes_configuration: RoutesConfiguration) {
         try {
-            this.routes = require(path.resolve(process.cwd(), routes_configuration));
+            const routes = routes_configuration.path ? require(path.resolve(process.cwd(), routes_configuration.path))
+                : JSON.parse(routes_configuration.json!);
+            this.speak(null, { name: 'route-loaded', data: { routes_configuration } })
+            return routes;
         } catch (e) {
             consola.error(e);
-            throw new RouteConfigurationPathInvalid(routes_configuration)
+            const error = new RouteConfigurationPathInvalid(this.getRoutesConfiguration(routes_configuration))
+            this.speak(null, { name: 'error', data: { error } })
+            throw error;
         }
-        if (!this.hasRoutes()) throw new RouteConfigurationsNotProvided();
+    }
+
+    private loadRoutes({
+        routes_configuration
+    }: { routes_configuration: RoutesConfiguration }) {
+        // Parsing Routes
+        this.routes = this.parseRoutesConfiguration(routes_configuration);
+
+        if (!this.hasRoutes()) {
+            const error = new RouteConfigurationsNotProvided();
+            this.speak(null, { name: 'error', data: { error } })
+            throw error;
+        }
 
         Object.keys(this.routes).forEach((base_route: string) => {
             Object.keys(this.routes[base_route]).forEach((each_route: string) => {
                 let schema_path = this.routes[base_route][each_route];
                 const route = base_route + each_route;
-                consola.info(`Successfully imported schema from ${schema_path}`);
                 try {
                     this.processor.setSchema(require(schema_path));
+                    this.speak(
+                        {
+                            level: 'success',
+                            message: `Successfully imported schema from ${schema_path}`
+                        },
+                        {
+                            name: 'schema-loaded',
+                            data: { schema_path }
+                        })
                 } catch (e) {
                     consola.error(e);
-                    throw new UnableToLoadSchema(schema_path)
+                    const error = new UnableToLoadSchema(schema_path);
+                    this.speak(null, { name: 'error', data: { error } })
+                    throw error;
                 }
                 this.add({
                     route: route,
                     schema_processor: this.processor
                 });
-                consola.success(`Successfully hosted route '${route}' from ${path.relative(process.cwd(), routes_configuration)}.`);
+                this.speak(
+                    {
+                        level: 'success',
+                        message: `Successfully hosted route '${route}'.`
+                    },
+                    {
+                        name: 'route-hosted',
+                        data: { route }
+                    })
             });
         });
     }
@@ -63,50 +141,90 @@ class Server {
     private loadProcessor({
         processor,
         custom_primitives
-    }: { processor: SchemaProcessor, custom_primitives: string[] }) {
+    }: { processor: SchemaProcessor, custom_primitives?: string[] }) {
         let primitives_module: Record<string, Function> = {};
         if (custom_primitives) {
             custom_primitives.forEach((module: string) => {
                 try {
                     primitives_module = require(path.resolve(process.cwd(), module));
+                    this.speak(null, { name: 'primitive-loaded', data: { module } })
                 } catch (e) {
                     consola.error(e);
-                    if ((e as Error).message.includes('MODULE_NOT_FOUND')) throw new CustomPrimitivesPathInvalid(module)
+                    if ((e as Error).message.includes('MODULE_NOT_FOUND')) {
+                        const error = new CustomPrimitivesPathInvalid(module);
+                        this.speak(null, { name: 'error', data: { error } })
+                        throw error;
+                    }
                 }
-                Object.keys(primitives_module).forEach(function (eachPrimitive) {
+                Object.keys(primitives_module).forEach((eachPrimitive) => {
                     processor.register(eachPrimitive, primitives_module[eachPrimitive]);
-                    consola.success(`Successfully registered primitive '${eachPrimitive}' from ${path.relative(process.cwd(), module)}.`);
+                    this.speak(
+                        {
+                            level: 'success',
+                            message: `Successfully registered primitive '${eachPrimitive}' from ${path.relative(process.cwd(), module)}.`
+                        },
+                        {
+                            name: 'primitive-registered',
+                            data: { eachPrimitive }
+                        });
                 });
             });
         }
     }
 
-    start({
-        port,
-        routes_configuration,
-        custom_primitives,
-        callback
-    }: {
-        port: number,
-        routes_configuration: string,
-        custom_primitives: string[],
-        callback?: () => void
-    }) {
-        if (!routes_configuration) throw new RouteConfigurationsNotProvided();
-        else if (!this.isServerUp()) throw new ServerNotUp();
+    start(callback?: () => void) {
+        if (!this.routes_configuration) {
+            const error = new RouteConfigurationsNotProvided();
+            this.speak(null, { name: 'error', data: { error } })
+            throw error;
+        } else if (!this.isServerUp()) {
+            const error = new ServerNotUp();
+            this.speak(null, { name: 'error', data: { error } })
+            throw error;
+        }
 
-        consola.info(custom_primitives ? `Adding primitives from ${custom_primitives}.` : `No custom primitives registered.`);
+        // Loading Processor with Custom Primitives
+        var message = this.custom_primitives ? `Adding primitives from ${this.custom_primitives}.` : `No custom primitives registered.`;
+        this.speak({
+            level: 'info',
+            message
+        }, {
+            name: 'info',
+            data: { message }
+        })
         this.loadProcessor({
             processor: this.processor,
-            custom_primitives: custom_primitives
+            custom_primitives: this.custom_primitives
         })
 
-        consola.info(`Adding route configurations from ${routes_configuration}.`);
-        this.loadRoutes({
-            routes_configuration: routes_configuration
-        });
-        this.server!.listen(port, () => {
-            consola.success(`Eski is running on port ${port}`);
+        // Loading Routes
+        message = `Adding route configurations from ${this.routes_configuration}.`;
+        this.speak({
+            level: 'info',
+            message
+        }, {
+            name: 'info',
+            data: { message }
+        })
+        this.loadRoutes({ routes_configuration: this.routes_configuration });
+
+        // Starting Eski Server
+        message = `Starting Eski Server.`;
+        this.speak({
+            level: 'info',
+            message
+        }, {
+            name: 'info',
+            data: { message }
+        })
+        this.httpServer = this.server.listen(this.port, () => {
+            this.speak({
+                level: 'success',
+                message: `Eski is running on port ${this.port}`
+            }, {
+                name: 'started',
+                data: { port: this.port }
+            })
             if (callback) {
                 consola.info('Executing callback...')
                 callback();
@@ -114,12 +232,31 @@ class Server {
         });
     }
 
-    add({
+    private add({
         route,
         schema_processor
     }: { route: string, schema_processor: SchemaProcessor }) {
-        if (this.isServerUp()) this.server!.get(route, (req, res) => res.jsonp(schema_processor.process()));
+        if (this.isServerUp()) this.server!.get(route, (req, res) => {
+            const response = schema_processor.process();
+            const code = 200;
+            res.status(code).jsonp(response)
+            this.emitter.emit('response', { route, response, code });
+        });
+    }
+
+    stop() {
+        if (this.httpServer) {
+            this.httpServer.close();
+            const message = `Server on port ${this.port} was stopped!`;
+            this.speak({
+                level: 'info',
+                message
+            }, {
+                name: 'info',
+                data: { message }
+            })
+        }
     }
 }
 
-export default Server;
+export default EskiServer;
