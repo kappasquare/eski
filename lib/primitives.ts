@@ -1,7 +1,7 @@
 
 const casual = require('casual');
 
-module.exports = {
+export const Primitives: Record<string, Function> = {
 	country: function () { return casual.country; },
 	city: function () { return casual.city; },
 	zip: function () { return casual.zip(); },
@@ -14,7 +14,7 @@ module.exports = {
 	latitude: function () { return casual.latitude; },
 	longitude: function () { return casual.longitude; },
 	sentence: function () { return casual.sentence; },
-	sentences: function (args) { return casual.sentences(args.n); },
+	sentences: function (n: number) { return casual.sentences(n); },
 
 	title: function () { return casual.title; },
 	text: function () { return casual.text; },
@@ -22,8 +22,8 @@ module.exports = {
 	short_description: function () { return casual.short_description; },
 	string: function () { return casual.string; },
 	word: function () { return casual.word; },
-	words: function (args) { return casual.words(args.n); },
-	array_of_words: function (args) { return casual.array_of_words(args.n); },
+	words: function (n: number) { return casual.words(n); },
+	array_of_words: function (n: number) { return casual.array_of_words(n); },
 
 	ip: function () { return casual.ip; },
 	domain: function () { return casual.domain; },
@@ -45,17 +45,17 @@ module.exports = {
 	phone: function () { return casual.phone; },
 
 	random: function () { return casual.random; },
-	integer: function (args) { return casual.integer(args.from, args.to); },
-	double: function (args) { return casual.double(args.from, args.to); },
-	array_of_digits: function (args) { return casual.array_of_digits(args.n); },
-	array_of_integers: function (args) { return casual.array_of_integers(args.n); },
-	array_of_doubles: function (args) { return casual.array_of_doubles(args.n); },
+	integer: function (args: { from: number, to: number }) { return casual.integer(args.from, args.to); },
+	double: function (args: { from: number, to: number }) { return casual.double(args.from, args.to); },
+	array_of_digits: function (n: number) { return casual.array_of_digits(n); },
+	array_of_integers: function (n: number) { return casual.array_of_integers(n); },
+	array_of_doubles: function (n: number) { return casual.array_of_doubles(n); },
 	coin_flip: function () { return casual.coin_flip; },
 
 	unix_time: function () { return casual.unix_time; },
 	moment: function () { return casual.moment; },
-	date: function () { return casual.date(args.format); },
-	time: function (args) { return casual.time(args.format); },
+	date: function (format: string) { return casual.date(format); },
+	time: function (format: string) { return casual.time(format); },
 	century: function () { return casual.century; },
 	am_pm: function () { return casual.am_pm; },
 	day_of_year: function () { return casual.day_of_year; },
@@ -67,7 +67,7 @@ module.exports = {
 	timezone: function () { return casual.timezone; },
 
 	card_type: function () { return casual.card_type; },
-	card_number: function (args) { return casual.card_number(args.vendor); },
+	card_number: function (vendor: string) { return casual.card_number(vendor); },
 	card_exp: function () { return casual.card_exp; },
 	card_data: function () { return casual.card_data; },
 
@@ -85,28 +85,26 @@ module.exports = {
 	rgb_hex: function () { return casual.rgb_hex; },
 	rgb_array: function () { return casual.rgb_array; },
 
-	array_of: function (args) { return casual.array_of(args.times, args.generator); },
-	random_element: function (args) { return casual.random_element(args.array); },
-	random_key: function (args) { return casual.random_key(args.object); },
-	random_value: function (args) { return casual.random_value(args.object); },
-	random_string: function (args) {
+	array_of: function (times: number, generator: any) { return casual.array_of(times, generator); },
+	random_element: function (array: any[]) { return casual.random_element(array); },
+	random_key: function (object: any) { return casual.random_key(object); },
+	random_value: function (object: any) { return casual.random_value(object); },
+	random_string: function (args: { min_length: number, max_length: number, extras: any[], exclude_digits: boolean, exclude_letters: boolean }) {
 		return casual.random_string({
 			min_length: args.min_length, max_length: args.max_length, extras:
 				args.extras, exclude_digits: args.exclude_digits, exclude_letters: args.exclude_letters
 		});
 	},
 
-	extend: function (args) { return casual.extend(args.a, args.b); },
-	register_provider: function (args) { return casual.register_provider(args.provider); },
-	numerify: function (args) { return casual.numerify(args.format); },
-	randify: function (args) {
+	register_provider: function (provider: string) { return casual.register_provider(provider); },
+	numerify: function (format: string) { return casual.numerify(format); },
+	randify: function (args: { format: string, extras: any[], exclude_digits: boolean, exclude_letters: boolean }) {
 		return casual.randify({
-			format: args.format, extras: args.extra, exclude_digits: args.exclude_digits,
+			format: args.format, extras: args.extras, exclude_digits: args.exclude_digits,
 			exclude_letters: args.exclude_letters
 		});
 	},
-	join: function (args) { return casual.join(); },
-	populate: function (args) { return casual.populate(args.format); },
-	populate_one_of: function (args) { return casual.numerify(args.formats); },
+	populate: function (format: string) { return casual.populate(format); },
+	populate_one_of: function (formats: string[]) { return casual.numerify(formats); },
 
 };

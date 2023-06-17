@@ -1,7 +1,9 @@
 {
     ":is": "object",
     ":value": {
-        ":key:genders": {":is": "word"},
+        ":key:genders": {
+            ":is": "word"
+        },
         ":key:courses": {
             ":is": "object",
             ":value": {
@@ -13,21 +15,21 @@
                         ":is": "random_string",
                         ":conditions": {
                             "min_length": 10,
-                            "max_length": 10      
+                            "max_length": 10
                         }
                     }
                 }
             }
         },
-        ":key:name": {
-            ":is": "new",
-            ":conditions": {
-                ":value": "XXXXXX"
-            }
+        ":key:word": {
+            ":is": "word"
         },
-        ":key:word": {":is": "word"},
-        ":key:online": {":is": "boolean"},
-        ":key:uuid": {":is": "uuid"},
+        ":key:online": {
+            ":is": "boolean"
+        },
+        ":key:uuid": {
+            ":is": "uuid"
+        },
         ":key:ids": {
             ":is": "list",
             ":min_length": 1,
@@ -46,20 +48,28 @@
             ":value": {
                 ":is": "object",
                 ":value": {
-                    ":key:address": {":is": "address"},
-                    ":key:phone":{":is": "phone"},
+                    ":key:address": {
+                        ":is": "address"
+                    },
+                    ":key:phone": {
+                        ":is": "phone"
+                    },
                     ":key:zip": {
-                        ":is": "integer", 
+                        ":is": "integer",
                         ":conditions": {
-                            "from": 6000000, 
-                            "to": 6999999                
+                            "from": 6000000,
+                            "to": 6999999
                         }
                     },
                     ":key:academic_details": {
                         ":is": "object",
                         ":value": {
-                            ":key:primary": {":is": "word"},
-                            ":key:secondary": {":is": "word"}
+                            ":key:primary": {
+                                ":is": "word"
+                            },
+                            ":key:secondary": {
+                                ":is": "word"
+                            }
                         }
                     }
                 }
@@ -74,10 +84,10 @@
                 ":min_length": 1,
                 ":max_length": 10,
                 ":value": {
-                    ":is": "integer", 
+                    ":is": "integer",
                     ":conditions": {
-                        "from": 6000000, 
-                        "to": 6999999                
+                        "from": 6000000,
+                        "to": 6999999
                     }
                 }
             }
