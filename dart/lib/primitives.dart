@@ -71,19 +71,24 @@ final Primitives = {
   "user_agent": _faker.internet.userAgent,
   "guid": _faker.guid.guid,
   "job_title": _faker.job.title,
-  "word": (
-      {int min_length = 0,
-      int max_length = 10,
-      bool uppercase = true,
-      bool lowercase = true}) {
+  "word": ({
+    int min_length = 0,
+    int max_length = 10,
+    String charset = '',
+    bool uppercase = true,
+    bool lowercase = true,
+  }) {
     var length = random.integer(max_length, min: min_length);
     return random.fromCharSet(
-        CharSets.getCharsSet(uppercase: uppercase, lowercase: lowercase),
+        charset.isNotEmpty
+            ? charset
+            : CharSets.getCharsSet(uppercase: uppercase, lowercase: lowercase),
         length);
   },
   "words": ({
     int count = 3,
     int word_length = 5,
+    String charset = '',
     uppercase = true,
     lowercase = true,
   }) {
@@ -91,7 +96,10 @@ final Primitives = {
     var randomCount = random.integer(count);
     List.generate(randomCount + 1, (__) {
       words.add(random.fromCharSet(
-          CharSets.getCharsSet(uppercase: uppercase, lowercase: lowercase),
+          charset.isNotEmpty
+              ? charset
+              : CharSets.getCharsSet(
+                  uppercase: uppercase, lowercase: lowercase),
           random.integer(word_length)));
     });
     return words.join(" ");
@@ -133,23 +141,29 @@ final Primitives = {
   "numbers_from_pattern": ({String pattern = "####"}) =>
       random.fromPattern([pattern]),
   "string_from_pattern": ({
+    String charset = '',
     String pattern = "####",
     bool uppercase = true,
     bool lowercase = true,
     bool numbers = true,
     bool special = true,
   }) {
-    return pattern.splitMapJoin('#',
-        onMatch: (_) => random.fromCharSet(
-            CharSets.getCharsSet(
-              uppercase: uppercase,
-              lowercase: lowercase,
-              numbers: numbers,
-              special: special,
-            ),
-            1));
+    return pattern.splitMapJoin(
+      '#',
+      onMatch: (_) => random.fromCharSet(
+          charset.isNotEmpty
+              ? charset
+              : CharSets.getCharsSet(
+                  uppercase: uppercase,
+                  lowercase: lowercase,
+                  numbers: numbers,
+                  special: special,
+                ),
+          1),
+    );
   },
   "from_charset": ({
+    String charset = '',
     bool uppercase = true,
     bool lowercase = true,
     bool numbers = true,
@@ -157,11 +171,14 @@ final Primitives = {
     int length = 10,
   }) =>
       random.fromCharSet(
-          CharSets.getCharsSet(
-            uppercase: uppercase,
-            lowercase: lowercase,
-            numbers: numbers,
-            special: special,
-          ),
-          length)
+        charset.isNotEmpty
+            ? charset
+            : CharSets.getCharsSet(
+                uppercase: uppercase,
+                lowercase: lowercase,
+                numbers: numbers,
+                special: special,
+              ),
+        length,
+      )
 };
