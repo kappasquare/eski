@@ -1,5 +1,5 @@
 name: eski
-description: A sample command-line application.
+description: The offical dart port of the Eski Server!
 version: 1.0.0
 # repository: https://github.com/my_org/my_repo
 
@@ -8,8 +8,8 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
-  # path: ^1.8.0
   args: ^2.4.1
+  events_emitter: ^0.5.2
   flat: ^0.4.1
   logging: ^1.2.0
 

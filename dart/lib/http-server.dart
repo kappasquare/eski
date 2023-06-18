@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'dart:io';
-
+import 'dart:convert';
+import 'package:eski/events-handler.dart';
 import 'package:eski/logger.dart';
 import 'package:eski/schema.dart';
 
@@ -19,36 +19,44 @@ Future<void> handleRequests(
           handleGet(request, processor);
           break;
         default:
-          handleUnsupported(request);
+          handleInvalidRequest('Unsupported request', request);
           break;
       }
     } else {
-      request.response
-        ..statusCode = HttpStatus.notFound
-        ..write(jsonEncode({"error": 'Unsupported path: ${request.uri}.'}))
-        ..close().then((_) {
-          Logger.error(
-              '[${request.method}:${HttpStatus.notFound}] ${request.uri}');
-        });
+      handleInvalidRequest('Invalid route', request);
     }
   }
 }
 
 void handleGet(HttpRequest request, SchemaProcessor processor) {
+  var response = processor.process();
+  int status = response == null ? 500 : HttpStatus.ok;
   request.response
-    ..statusCode = HttpStatus.ok
-    ..write(jsonEncode(processor.process()))
+    ..statusCode = status
+    ..write(jsonEncode(response))
     ..close().then((_) {
-      Logger.success('[${request.method}:${HttpStatus.ok}] ${request.uri}');
+      var message = '[${request.method}:${HttpStatus.ok}] ${request.uri}';
+      EventsHandler.shoutOkResponse(message, {
+        "data": response,
+        "method": request.method,
+        "status": status,
+        "path": request.uri
+      });
     });
 }
 
-void handleUnsupported(HttpRequest request) {
+void handleInvalidRequest(String message, HttpRequest request) {
+  var response = {
+    "error": '$message: ${request.uri}.',
+    "method": request.method,
+    "status": HttpStatus.notFound,
+    "path": request.uri
+  };
   request.response
     ..statusCode = HttpStatus.methodNotAllowed
-    ..write(jsonEncode({"error": 'Unsupported request: ${request.method}.'}))
+    ..write(jsonEncode(response))
     ..close().then((_) {
-      Logger.warn(
-          '[${request.method}:${HttpStatus.methodNotAllowed}] ${request.uri}');
+      var message = '[${request.method}:${HttpStatus.notFound}] ${request.uri}';
+      EventsHandler.shoutErrorResponse(message, response);
     });
 }

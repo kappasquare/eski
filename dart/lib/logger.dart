@@ -16,9 +16,15 @@ class Logger {
     L.Logger.root.level = L.Level.ALL;
     L.Logger.root.onRecord.listen((record) {
       var level = record.level.name.toLowerCase();
-      print('${_[level]!['color']}[${_[level]!['tag']}]'
-          '[${record.time}] ${record.message}\x1B[0m');
+      var message = '[${_[level]!['tag']}][${record.time}] ${record.message}';
+      print(colorize(message, level));
     });
+  }
+
+  static colorize(String message, String level) {
+    var color = _[level]?['color'];
+    if (color == null) return print(message);
+    return '$color$message\x1B[0m';
   }
 
   static info(String message) {

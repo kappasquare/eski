@@ -1,6 +1,8 @@
 // ignore_for_file: constant_identifier_names
 import 'dart:math';
 
+import 'package:eski/events-handler.dart';
+
 // ignore: non_constant_identifier_names
 final KEYWORD_SCHEMAKEY_MAP = {
   "IS": ":is",
@@ -24,45 +26,53 @@ enum KEYWORDS {
   OBJECT
 }
 
-rawKey(KEYWORDS keyword) {
+String? rawKey(KEYWORDS keyword) {
   return KEYWORD_SCHEMAKEY_MAP[keyword.name];
 }
 
-isListOrObject(String value) {
+bool isListOrObject(String value) {
   return value == rawKey(KEYWORDS.LIST) || value == rawKey(KEYWORDS.OBJECT);
 }
 
-checkIfList(String value) {
+bool checkIfList(String value) {
   return value == rawKey(KEYWORDS.LIST);
 }
 
-getKey(String value) {
+String? getKey(String value) {
   return value.contains(rawKey(KEYWORDS.KEY)!)
       ? value.split(rawKey(KEYWORDS.KEY)!).last
-      : false;
+      : null;
 }
 
 class SchemaProcessor {
   Map<String, dynamic> schema = {};
   SchemaProcessor({required this.schema});
 
-  _process(Map<String, dynamic> schema) {
+  _process(String key, Map<String, dynamic> schema) {
     // ignore: non_constant_identifier_names
     var IS = schema[rawKey(KEYWORDS.IS)];
-    if (isListOrObject(IS)) {
-      if (schema[rawKey(KEYWORDS.VALUE)] == null) {
-        throw ('Value not found!');
-      }
-      return checkIfList(IS)
-          ? _processList(schema, [])
-          : _processObject(schema, {});
+    if (IS == null) {
+      EventsHandler.shoutIsNotProvided(key);
     } else {
-      return _processPrimitive(IS, schema[rawKey(KEYWORDS.CONDITIONS)]);
+      if (isListOrObject(IS)) {
+        if (schema[rawKey(KEYWORDS.VALUE)] == null) {
+          EventsHandler.shoutValueNotProvided(key);
+        }
+        return checkIfList(IS)
+            ? _processList(key, schema, [])
+            : _processObject(key, schema, {});
+      } else {
+        return _processPrimitive(IS, schema[rawKey(KEYWORDS.CONDITIONS)]);
+      }
     }
   }
 
   process() {
-    return _process(schema);
+    try {
+      return _process('\$', schema);
+    } catch (e) {
+      if (e is! SchemaValidationException) rethrow;
+    }
   }
 
   int between(int min, int max) {
@@ -70,14 +80,15 @@ class SchemaProcessor {
     return min + Random().nextInt(max - min);
   }
 
-  _processList(Map<String, dynamic> schema, List response) {
+  _processList(String key, Map<String, dynamic> schema, List response) {
     var value = schema[rawKey(KEYWORDS.VALUE)];
+    if (value == null) return response;
     if (schema[rawKey(KEYWORDS.MIN_LENGTH)] == null ||
         schema[rawKey(KEYWORDS.MAX_LENGTH)] == null) {
-      throw 'ListConditionsNotFound';
+      EventsHandler.shoutListConditionsNotProvided(key);
     }
     if (value[rawKey(KEYWORDS.IS)] == null) {
-      throw 'ListValueIsNotFound';
+      EventsHandler.shoutValueNotProvided(key);
     }
 
     for (int i = 0;
@@ -85,17 +96,24 @@ class SchemaProcessor {
             between(schema[rawKey(KEYWORDS.MIN_LENGTH)],
                 schema[rawKey(KEYWORDS.MAX_LENGTH)]);
         i++) {
-      response.add(_process(value));
+      response.add(_process(key, value));
     }
     return response;
   }
 
-  _processObject(Map<String, dynamic> schema, dynamic response) {
-    Map<String, dynamic> value = schema[rawKey(KEYWORDS.VALUE)];
-    for (String key in value.keys) {
-      var extractedKey = getKey(key);
-      if (extractedKey != null) {
-        response[extractedKey] = _process(value[key]);
+  _processObject(
+      String parentKey, Map<String, dynamic> schema, dynamic response) {
+    Map<String, dynamic>? value = schema[rawKey(KEYWORDS.VALUE)];
+    if (value == null) {
+      EventsHandler.shoutValueNotProvided(parentKey);
+    } else {
+      for (String rawKey in value.keys) {
+        String? key = getKey(rawKey);
+        if (key != null) {
+          response[key] = _process('$parentKey.$key', value[rawKey]);
+        } else {
+          EventsHandler.shoutKeyNotProvided(parentKey);
+        }
       }
     }
     return response;
