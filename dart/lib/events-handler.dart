@@ -161,6 +161,18 @@ class EventsHandler {
     }
   }
 
+  static shoutPrimitiveNotAvailable(String type) {
+    var message = 'Primitive $type was available!';
+    _shoutSchemaValidationException(EskiEvents.PrimitiveMissing, type, message);
+  }
+
+  static shoutInvalidConditionsForPrimitive(String type, dynamic conditions) {
+    var message =
+        'Invalid conditions provided to primitive $type. Conditions: $conditions';
+    _shoutSchemaValidationException(
+        EskiEvents.InvalidConditionsForPrimitive, type, message);
+  }
+
   static shoutValueNotProvided(String key) {
     var message = '(:value) was not provided at path $key';
     _shoutSchemaValidationException(EskiEvents.ValueNotProvided, key, message);
@@ -198,6 +210,7 @@ enum EskiEvents {
   KeyNotProvided,
   PrimitiveMissing,
   ConditionsMissing,
+  InvalidConditionsForPrimitive,
   PrimitiveNotDefined,
   SchemaInvalid,
   UnableToHostRoute,

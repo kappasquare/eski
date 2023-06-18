@@ -1,0 +1,41 @@
+{
+    ":is": "object",
+    ":value": {
+        ":key:gender": {
+            ":is": "sentences",
+            ":conditions": {
+                "count": 10
+            }
+        },
+        ":key:email": {
+            ":is": "email"
+        },
+        ":key:dish": {
+            ":is": "dish"
+        },
+        ":key:day": {
+            ":is": "day"
+        },
+        ":key:id": {
+            ":is": "string_from_pattern"
+        },
+        ":key:courses": {
+            ":is": "object",
+            ":value": {
+                ":key:lists": {
+                    ":is": "list",
+                    ":min_length": 1,
+                    ":max_length": 10,
+                    ":value": {
+                        ":is": "word",
+                        ":conditions": {
+                            "min_length": 10,
+                            "max_length": 10,
+                            "uppercase": false
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,8 +1,8 @@
 {
   "/api/v1": {
-    "test1": "schema.json",
+    "test1": "schema2.json",
     "configurations": {
-      "test1": "schema.json"
+      "test1": "schema2.json"
     }
   }
 }

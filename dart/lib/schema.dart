@@ -2,6 +2,7 @@
 import 'dart:math';
 
 import 'package:eski/events-handler.dart';
+import 'package:eski/primitives.dart';
 
 // ignore: non_constant_identifier_names
 final KEYWORD_SCHEMAKEY_MAP = {
@@ -119,7 +120,22 @@ class SchemaProcessor {
     return response;
   }
 
+  Map<Symbol, dynamic> _symbolizeKeys(Map<String, dynamic> map) {
+    return map.map((k, v) => MapEntry(Symbol(k), v));
+  }
+
   _processPrimitive(String type, dynamic conditions) {
-    return 'test';
+    var primitive = Primitives[type];
+    if (primitive == null) {
+      EventsHandler.shoutPrimitiveNotAvailable(type);
+    }
+    try {
+      return Function.apply(primitive!, [], _symbolizeKeys(conditions ?? {}));
+    } catch (e) {
+      if (e.toString().contains('Closure call with mismatched arguments')) {
+        EventsHandler.shoutInvalidConditionsForPrimitive(type, conditions);
+      }
+      rethrow;
+    }
   }
 }
