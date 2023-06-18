@@ -13,10 +13,10 @@ final KEYWORD_SCHEMAKEY_MAP = {
   "MIN_LENGTH": ":min_length",
   "MAX_LENGTH": ":max_length",
   "LIST": "list",
-  "OBJECT": "object"
+  "OBJECT": "object",
 };
 
-enum KEYWORDS {
+enum SCHEMA_KEYWORDS {
   IS,
   KEY,
   VALUE,
@@ -27,43 +27,51 @@ enum KEYWORDS {
   OBJECT
 }
 
-String? rawKey(KEYWORDS keyword) {
+String? rawSchemaKey(SCHEMA_KEYWORDS keyword) {
   return KEYWORD_SCHEMAKEY_MAP[keyword.name];
 }
 
 bool isListOrObject(String value) {
-  return value == rawKey(KEYWORDS.LIST) || value == rawKey(KEYWORDS.OBJECT);
+  return value == rawSchemaKey(SCHEMA_KEYWORDS.LIST) ||
+      value == rawSchemaKey(SCHEMA_KEYWORDS.OBJECT);
 }
 
 bool checkIfList(String value) {
-  return value == rawKey(KEYWORDS.LIST);
+  return value == rawSchemaKey(SCHEMA_KEYWORDS.LIST);
 }
 
 String? getKey(String value) {
-  return value.contains(rawKey(KEYWORDS.KEY)!)
-      ? value.split(rawKey(KEYWORDS.KEY)!).last
+  return value.contains(rawSchemaKey(SCHEMA_KEYWORDS.KEY)!)
+      ? value.split(rawSchemaKey(SCHEMA_KEYWORDS.KEY)!).last
       : null;
 }
 
 class SchemaProcessor {
   Map<String, dynamic> schema = {};
+  Map<String, Map<String, int>> delay = {};
   SchemaProcessor({required this.schema});
+
+  setDelay(String path, int min, int max) {
+    if (min > max) max = min;
+    delay[path] = {"min": min, "max": max};
+  }
 
   _process(String key, Map<String, dynamic> schema) {
     // ignore: non_constant_identifier_names
-    var IS = schema[rawKey(KEYWORDS.IS)];
+    var IS = schema[rawSchemaKey(SCHEMA_KEYWORDS.IS)];
     if (IS == null) {
       EventsHandler.shoutIsNotProvided(key);
     } else {
       if (isListOrObject(IS)) {
-        if (schema[rawKey(KEYWORDS.VALUE)] == null) {
+        if (schema[rawSchemaKey(SCHEMA_KEYWORDS.VALUE)] == null) {
           EventsHandler.shoutValueNotProvided(key);
         }
         return checkIfList(IS)
             ? _processList(key, schema, [])
             : _processObject(key, schema, {});
       } else {
-        return _processPrimitive(IS, schema[rawKey(KEYWORDS.CONDITIONS)]);
+        return _processPrimitive(
+            IS, schema[rawSchemaKey(SCHEMA_KEYWORDS.CONDITIONS)]);
       }
     }
   }
@@ -82,20 +90,20 @@ class SchemaProcessor {
   }
 
   _processList(String key, Map<String, dynamic> schema, List response) {
-    var value = schema[rawKey(KEYWORDS.VALUE)];
+    var value = schema[rawSchemaKey(SCHEMA_KEYWORDS.VALUE)];
     if (value == null) return response;
-    if (schema[rawKey(KEYWORDS.MIN_LENGTH)] == null ||
-        schema[rawKey(KEYWORDS.MAX_LENGTH)] == null) {
+    if (schema[rawSchemaKey(SCHEMA_KEYWORDS.MIN_LENGTH)] == null ||
+        schema[rawSchemaKey(SCHEMA_KEYWORDS.MAX_LENGTH)] == null) {
       EventsHandler.shoutListConditionsNotProvided(key);
     }
-    if (value[rawKey(KEYWORDS.IS)] == null) {
+    if (value[rawSchemaKey(SCHEMA_KEYWORDS.IS)] == null) {
       EventsHandler.shoutValueNotProvided(key);
     }
 
     for (int i = 0;
         i <
-            between(schema[rawKey(KEYWORDS.MIN_LENGTH)],
-                schema[rawKey(KEYWORDS.MAX_LENGTH)]);
+            between(schema[rawSchemaKey(SCHEMA_KEYWORDS.MIN_LENGTH)],
+                schema[rawSchemaKey(SCHEMA_KEYWORDS.MAX_LENGTH)]);
         i++) {
       response.add(_process(key, value));
     }
@@ -104,7 +112,7 @@ class SchemaProcessor {
 
   _processObject(
       String parentKey, Map<String, dynamic> schema, dynamic response) {
-    Map<String, dynamic>? value = schema[rawKey(KEYWORDS.VALUE)];
+    Map<String, dynamic>? value = schema[rawSchemaKey(SCHEMA_KEYWORDS.VALUE)];
     if (value == null) {
       EventsHandler.shoutValueNotProvided(parentKey);
     } else {

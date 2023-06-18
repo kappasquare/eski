@@ -1,8 +1,16 @@
 {
   "/api/v1": {
-    "test1": "schema2.json",
+    "test1": {
+      ":schema": "schema2.json",
+      ":config": {
+        ":min-delay": 100,
+        ":max-delay": 5000
+      }
+    },
     "configurations": {
-      "test1": "schema2.json"
+      "test1": {
+        ":schema": "schema2.json"
+      }
     }
   }
 }

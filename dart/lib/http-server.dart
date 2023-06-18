@@ -1,8 +1,9 @@
 import 'dart:io';
 import 'dart:convert';
-import 'package:eski/events-handler.dart';
-import 'package:eski/logger.dart';
+import 'package:eski/constants.dart';
 import 'package:eski/schema.dart';
+import 'package:eski/events-handler.dart';
+import 'package:faker/faker.dart';
 
 Future<HttpServer> createServer(int port) async {
   final address = InternetAddress.loopbackIPv4;
@@ -12,11 +13,14 @@ Future<HttpServer> createServer(int port) async {
 Future<void> handleRequests(
     HttpServer server, Map<String, SchemaProcessor> processors) async {
   await for (HttpRequest request in server) {
-    SchemaProcessor? processor = processors[request.uri.toString()];
+    var path = request.uri.toString();
+    SchemaProcessor? processor = processors[path];
     if (processor != null) {
       switch (request.method) {
         case 'GET':
-          handleGet(request, processor);
+          handleGet(request, processor,
+              minDelay: processor.delay[path]!['min']!,
+              maxDelay: processor.delay[path]!['max']!);
           break;
         default:
           handleInvalidRequest('Unsupported request', request);
@@ -28,27 +32,32 @@ Future<void> handleRequests(
   }
 }
 
-void handleGet(HttpRequest request, SchemaProcessor processor) {
-  var eskiResponse = processor.process();
-  int status = eskiResponse == null ? 500 : HttpStatus.ok;
-  request.response.headers.contentType = ContentType.json;
-  request.response
-    ..statusCode = status
-    ..write(jsonEncode(eskiResponse))
-    ..close().then((_) {
-      var message = '[${request.method}:${HttpStatus.ok}] ${request.uri}';
-      EventsHandler.shoutOkResponse(message, {
-        "data": eskiResponse,
-        "method": request.method,
-        "status": status,
-        "path": request.uri.toString()
+void handleGet(HttpRequest request, SchemaProcessor processor,
+    {int minDelay = 0, int maxDelay = 0}) {
+  Future.delayed(Duration(
+          milliseconds: faker.randomGenerator.integer(maxDelay, min: minDelay)))
+      .then((_) {
+    var eskiResponse = processor.process();
+    int status = eskiResponse == null ? 500 : HttpStatus.ok;
+    request.response.headers.contentType = ContentType.json;
+    request.response
+      ..statusCode = status
+      ..write(jsonEncode(eskiResponse))
+      ..close().then((_) {
+        var message = '[${request.method}:${HttpStatus.ok}] ${request.uri}';
+        EventsHandler.shoutOkResponse(message, {
+          "data": eskiResponse,
+          "method": request.method,
+          "status": status,
+          "path": request.uri.toString()
+        });
       });
-    });
+  });
 }
 
 void handleInvalidRequest(String message, HttpRequest request) {
   var response = {
-    "error": '$message: ${request.uri}.',
+    "error": '$message: ${request.uri}',
     "method": request.method,
     "status": HttpStatus.notFound,
     "path": request.uri.toString()

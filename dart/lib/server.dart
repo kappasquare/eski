@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:eski/route.dart';
+import 'package:eski/utils.dart';
 import 'package:path/path.dart' as p;
-import 'package:eski/constants.dart';
 import 'package:eski/schema.dart';
-import 'package:flat/flat.dart';
 import 'package:eski/events-handler.dart';
 import 'package:eski/http-server.dart';
 import 'package:eski/logger.dart';
@@ -70,17 +70,24 @@ class EskiServer {
       EventsHandler.shoutUnableToLoadRouteConfiguration(e.toString());
     }
 
-    Map<dynamic, dynamic> routes = flattenJson(routesConfiguration);
+    RouteConfig config = RouteConfigProcessor.process(routesConfiguration);
 
-    for (String key in routes.keys) {
-      var route = key.replaceAll(FLATTEN_DELIMETER, PATH_DELIMETER);
-      try {
-        var path = getSchemaAbsolutePath(routes[key]);
-        var schemaJson = jsonDecode(await File(path).readAsString());
-        processors[route] = SchemaProcessor(schema: schemaJson);
-        EventsHandler.shoutSuccessfullyHostedRoute(route);
-      } catch (e) {
-        EventsHandler.shoutUnableToHostRoute(route, e.toString());
+    for (String key in config.pathToSchemaMap.keys) {
+      var route = cleanFlatPath(key);
+      if (route.endsWith(rawRouteKey(ROUTE_KEYWORDS.SCHEMA)!)) {
+        try {
+          var path =
+              route.split("/${rawRouteKey(ROUTE_KEYWORDS.SCHEMA)}").first;
+          var schemaPath = getSchemaAbsolutePath(config.pathToSchemaMap[key]);
+          var schemaJson = jsonDecode(await File(schemaPath).readAsString());
+          var processor = SchemaProcessor(schema: schemaJson);
+          var delay = config.getDelay(path);
+          processor.setDelay(path, delay['min'], delay['max']);
+          processors[path] = processor;
+          EventsHandler.shoutSuccessfullyHostedRoute(path);
+        } catch (e) {
+          EventsHandler.shoutUnableToHostRoute(route, e.toString());
+        }
       }
     }
 
@@ -92,13 +99,5 @@ class EskiServer {
     }).catchError((e) {
       EventsHandler.throwUnableToStartServer(port, e.toString());
     });
-  }
-
-  Map<dynamic, dynamic> flattenJson(Map<String, dynamic> json) {
-    return flatten(json, delimiter: FLATTEN_DELIMETER);
-  }
-
-  Future<Map<String, dynamic>> readJsonFile(String path) async {
-    return jsonDecode(await File(path).readAsString());
   }
 }
