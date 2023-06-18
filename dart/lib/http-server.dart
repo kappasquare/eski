@@ -29,15 +29,16 @@ Future<void> handleRequests(
 }
 
 void handleGet(HttpRequest request, SchemaProcessor processor) {
-  var response = processor.process();
-  int status = response == null ? 500 : HttpStatus.ok;
+  var eskiResponse = processor.process();
+  int status = eskiResponse == null ? 500 : HttpStatus.ok;
+  request.response.headers.contentType = ContentType.json;
   request.response
     ..statusCode = status
-    ..write(jsonEncode(response))
+    ..write(jsonEncode(eskiResponse))
     ..close().then((_) {
       var message = '[${request.method}:${HttpStatus.ok}] ${request.uri}';
       EventsHandler.shoutOkResponse(message, {
-        "data": response,
+        "data": eskiResponse,
         "method": request.method,
         "status": status,
         "path": request.uri.toString()
@@ -52,7 +53,7 @@ void handleInvalidRequest(String message, HttpRequest request) {
     "status": HttpStatus.notFound,
     "path": request.uri.toString()
   };
-  print(response);
+  request.response.headers.contentType = ContentType.json;
   request.response
     ..statusCode = HttpStatus.methodNotAllowed
     ..write(jsonEncode(response))
