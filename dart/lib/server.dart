@@ -46,7 +46,10 @@ class EskiServer {
   }
 
   Future<Map<String, dynamic>> getRoutesContent() async {
-    print(isJsonMode());
+    // TODO: Support json in CLI mode.
+    if (isJsonMode() && mode == Mode.cli) {
+      throw '--routes-json is not yet supported in cli mode!';
+    }
     return isJsonMode()
         ? jsonDecode(routes!.json!)
         : jsonDecode(
