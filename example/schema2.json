@@ -24,14 +24,33 @@
             ":value": {
                 ":key:lists": {
                     ":is": "list",
-                    ":min_length": 1,
-                    ":max_length": 10,
+                    ":min_length": 100,
+                    ":max_length": 100,
                     ":value": {
-                        ":is": "word",
-                        ":conditions": {
-                            "min_length": 10,
-                            "max_length": 10,
-                            "uppercase": false
+                        ":is": "object",
+                        ":value": {
+                            ":key:lists": {
+                                ":is": "list",
+                                ":min_length": 200,
+                                ":max_length": 200,
+                                ":value": {
+                                    ":is": "object",
+                                    ":value": {
+                                        ":key:email": {
+                                            ":is": "email"
+                                        },
+                                        ":key:dish": {
+                                            ":is": "dish"
+                                        },
+                                        ":key:day": {
+                                            ":is": "day"
+                                        },
+                                        ":key:id": {
+                                            ":is": "string_from_pattern"
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
