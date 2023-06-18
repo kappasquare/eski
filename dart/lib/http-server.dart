@@ -40,7 +40,7 @@ void handleGet(HttpRequest request, SchemaProcessor processor) {
         "data": response,
         "method": request.method,
         "status": status,
-        "path": request.uri
+        "path": request.uri.toString()
       });
     });
 }
@@ -50,8 +50,9 @@ void handleInvalidRequest(String message, HttpRequest request) {
     "error": '$message: ${request.uri}.',
     "method": request.method,
     "status": HttpStatus.notFound,
-    "path": request.uri
+    "path": request.uri.toString()
   };
+  print(response);
   request.response
     ..statusCode = HttpStatus.methodNotAllowed
     ..write(jsonEncode(response))
