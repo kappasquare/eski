@@ -1,7 +1,7 @@
 {
     "name": "@kappasquare/eski",
     "description": "An undemanding mock server for developers and testers that aims to abstract the complexities of coding a mock server into simple JSON configurations.",
-    "version": "0.0.7",
+    "version": "0.1.0",
     "main": "./lib/index.js",
     "scripts": {
         "test": "jest --",

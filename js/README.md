@@ -11,5 +11,5 @@ npm -g i @kappasquare/eski
 ```bash
 eski --routes "~/path/to/routes.json" --primitives "~/path/to/custom_primitives.js" --port 3210
 ```
-### Roadmap
-- [x] Add typescript support
+
+Full documentation available at https://github.com/kappasquare/eski
