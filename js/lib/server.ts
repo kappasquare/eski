@@ -70,7 +70,7 @@ class EskiServer {
             this.emitter.emit(event_details.name, event_details.data);
         }
     }
-
+    
     private getRoutesConfiguration = (routes_configuration: RoutesConfiguration) => routes_configuration.path ?
         routes_configuration.path : routes_configuration.json!;
 
