@@ -1,7 +1,5 @@
-// ignore: non_constant_identifier_names
-import 'package:eski/constants.dart';
+// ignore_for_file: constant_identifier_names
 import 'package:eski/utils.dart';
-import 'package:flat/flat.dart';
 
 final KEYWORD_ROUTEKEY_MAP = {
   "SCHEMA": ":schema",
@@ -52,16 +50,6 @@ class RouteConfigProcessor {
 
   static getConfig() {
     return _config;
-  }
-
-  static _processv2(Map<String, dynamic> config) {
-    throw 'v2 not Implemented';
-    // Map<dynamic, dynamic> flatConfig = flattenJson(config);
-    // for (String key in flatConfig.keys) {
-    //   String cleanKey = cleanFlatPath(key);
-    //   print('$cleanKey=${flatConfig[key]}');
-    //   if (key.startsWith(rawKey(KEYWORDS.ROUTES)!)) {}
-    // }
   }
 
   static process(Map<String, dynamic> config) {

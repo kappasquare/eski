@@ -1,7 +1,7 @@
 {
     "name": "@kappasquare/eski",
     "description": "A new mocking server for developers and testers. Eski aims to abstract the complexities of coding a mock server into simple JSON configurations.",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "main": "./lib/index.js",
     "scripts": {
         "test": "jest --",

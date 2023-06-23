@@ -234,8 +234,7 @@ Eski uses [json-server](https://github.com/typicode/json-server) and [casual](ht
 Eski currently only supports GET requests. As of yet, there are no requirements or plans to support other methods.
 Eski was named to abbreviate Easy Schema. Easy + Schema = Eski :)
 
-NOTE: Eski will be temporarily halting javascript support.
-	
+NOTE: The dart version of Eski is more actively developed than the Javascript version.
 ### Roadmap
 - [ ] Add UTs
 - [ ] Support Query params in GET requests
