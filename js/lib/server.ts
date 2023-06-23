@@ -70,7 +70,7 @@ class EskiServer {
             this.emitter.emit(event_details.name, event_details.data);
         }
     }
-    
+
     private getRoutesConfiguration = (routes_configuration: RoutesConfiguration) => routes_configuration.path ?
         routes_configuration.path : routes_configuration.json!;
 
@@ -197,15 +197,6 @@ class EskiServer {
             custom_primitives: this.custom_primitives
         })
 
-        // Loading Routes
-        message = `Adding route configurations from ${this.routes_configuration}.`;
-        this.speak({
-            level: 'info',
-            message
-        }, {
-            name: 'info',
-            data: { message }
-        })
         this.loadRoutes({ routes_configuration: this.routes_configuration });
 
         // Starting Eski Server

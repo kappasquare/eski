@@ -155,15 +155,6 @@ var EskiServer = /** @class */ (function () {
             processor: this.processor,
             custom_primitives: this.custom_primitives
         });
-        // Loading Routes
-        message = "Adding route configurations from ".concat(this.routes_configuration, ".");
-        this.speak({
-            level: 'info',
-            message: message
-        }, {
-            name: 'info',
-            data: { message: message }
-        });
         this.loadRoutes({ routes_configuration: this.routes_configuration });
         // Starting Eski Server
         message = "Starting Eski Server.";
